@@ -4,14 +4,14 @@ import numpy as np
 from PIL import Image
 import argparse
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 parser.add_argument('filename')
 parser.add_argument('-o', '--output', default='out.pdf', help='Output filename')
 parser.add_argument('-c', '--columns', default=2, type=int, help='Number of slides per row')
 parser.add_argument('-r', '--rows', default=3, type=int, help='Number of slides per column')
-parser.add_argument('-s', '--scale', default=6, type=int, help='Resolution scale. scale * 72dpi = output resolution')
-parser.add_argument('-m', '--mask', default=10, type=int, help='Convolution mask size with 72dpi (scale invariant)')
+parser.add_argument('-s', '--scale', default=6, type=int, help='Resolution scale of render (scale * 72dpi = output resolution)')
+parser.add_argument('-m', '--kernel', default=10, type=int, help='Convolution kernel size for the morphological opening operation (scale invariant)')
 parser.add_argument('-x', '--coord', default=[0, 0], type=int, nargs=2, help='Reference coordinate for background color detection')
 
 args = parser.parse_args()
@@ -23,7 +23,7 @@ new_pdf = pdfium.PdfDocument.new()
 ncol = args.columns
 nrow = args.rows
 scale = args.scale
-mask_size = args.mask * scale
+mask_size = args.kernel * scale
 ref = {
     'x' : args.coord[0],
     'y' : args.coord[1]
