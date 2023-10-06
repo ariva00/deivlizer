@@ -33,10 +33,8 @@ Note that the output argument is optional and the default is ```out.pdf```.
 
 The other optional arguments are listed with the ```-h``` flag and are:
 
-- ```--columns```: Number of slides per row
-- ```--rows```: Number of slides per column
 - ```--scale```: Resolution scale of render (scale * 72dpi = output resolution)
-- ```--kernel```: Convolution kernel size for the morphological opening operation
+- ```--kernel```: Kernel size for the morphological opening operation
 - ```--coord```: Reference coordinate for background color detection
 
 ## How it works

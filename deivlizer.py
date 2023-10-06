@@ -8,10 +8,8 @@ parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFo
 
 parser.add_argument('filename')
 parser.add_argument('-o', '--output', default='out.pdf', help='Output filename')
-parser.add_argument('-c', '--columns', default=2, type=int, help='Number of slides per row')
-parser.add_argument('-r', '--rows', default=3, type=int, help='Number of slides per column')
 parser.add_argument('-s', '--scale', default=6, type=int, help='Resolution scale of render (scale * 72dpi = output resolution)')
-parser.add_argument('-m', '--kernel', default=10, type=int, help='Convolution kernel size for the morphological opening operation (scale invariant)')
+parser.add_argument('-m', '--kernel', default=10, type=int, help='Kernel size for the morphological opening operation (scale invariant)')
 parser.add_argument('-x', '--coord', default=[0, 0], type=int, nargs=2, help='Reference coordinate for background color detection')
 
 args = parser.parse_args()
@@ -20,8 +18,6 @@ pdf = pdfium.PdfDocument(args.filename)
 
 new_pdf = pdfium.PdfDocument.new()
 
-ncol = args.columns
-nrow = args.rows
 scale = args.scale
 mask_size = args.kernel * scale
 ref = {
@@ -48,7 +44,7 @@ for i in range(len(pdf)):
     sort = np.lexsort((centroids[:,0], centroids[:,1]))
 
     for i in range(retval):
-        if sort[i] != labels[0,0]:
+        if sort[i] != labels[ref['x'], ref['y']]:
             mask = (labels==sort[i]).astype(np.uint8)
             contours,_ = cv2.findContours(mask.copy(), 1, 1)
             box = cv2.minAreaRect(contours[0])
