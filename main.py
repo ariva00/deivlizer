@@ -2,22 +2,39 @@ import pypdfium2 as pdfium
 import cv2
 import numpy as np
 from PIL import Image
+import argparse
 
-pdf = pdfium.PdfDocument('test.pdf')
+parser = argparse.ArgumentParser()
+
+parser.add_argument('filename')
+parser.add_argument('-o', '--output', default='out.pdf', help='Output filename')
+parser.add_argument('-c', '--columns', default=2, type=int, help='Number of slides per row')
+parser.add_argument('-r', '--rows', default=3, type=int, help='Number of slides per column')
+parser.add_argument('-s', '--scale', default=6, type=int, help='Resolution scale. scale * 72dpi = output resolution')
+parser.add_argument('-m', '--mask', default=10, type=int, help='Convolution mask size with 72dpi (scale invariant)')
+parser.add_argument('-x', '--coord', default=[0, 0], type=int, nargs=2, help='Reference coordinate for background color detection')
+
+args = parser.parse_args()
+
+pdf = pdfium.PdfDocument(args.filename)
 
 new_pdf = pdfium.PdfDocument.new()
 
-ncol = 2
-nrow = 3
-scale = 6
-mask_size = 10 * scale
+ncol = args.columns
+nrow = args.rows
+scale = args.scale
+mask_size = args.mask * scale
+ref = {
+    'x' : args.coord[0],
+    'y' : args.coord[1]
+}
 
 for i in range(len(pdf)):
     page = pdf[i]
     bitmap = page.render(scale = scale, rotation=0)
     img = bitmap.to_numpy()
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    mask = img == img[0,0,:]
+    mask = img == img[ref['x'], ref['y'], :]
     mask = mask[:,:,0]
     mask = mask.astype(np.uint8) * 255
 
@@ -52,5 +69,5 @@ for i in range(len(pdf)):
             except ValueError:
                 pass
     
-new_pdf.save("output.pdf")
+new_pdf.save(args.output)
 
