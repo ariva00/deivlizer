@@ -2,6 +2,8 @@
 
 Deivlizer is a tool to extract single slides from multi-slide pdf pages.
 
+![example](imgs/example.png)
+
 ## What you need to run it
 
 You'll need the python3 enviroment with the following packages:
