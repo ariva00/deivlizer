@@ -38,6 +38,7 @@ The other optional arguments are listed with the ```-h``` flag and are:
 - ```--scale```: Resolution scale of render (scale * 72dpi = output resolution)
 - ```--kernel```: Kernel size for the morphological opening operation
 - ```--coord```: Reference coordinate for background color detection
+- ```--batch```: Batch mode, process all pdf files in the input directory
 
 ## How it works
 
